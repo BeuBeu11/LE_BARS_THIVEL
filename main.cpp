@@ -17,6 +17,9 @@
 #include "mbed.h"
 #include <nsapi_dns.h>
 #include <MQTTClientMbedOs.h>
+#include "bme280.h"
+
+using namespace sixtron;
 
 namespace {
 #define GROUP_NUMBER            "feeds"
@@ -30,6 +33,9 @@ namespace {
 // Peripherals
 static DigitalOut led(LED1);
 static InterruptIn button(BUTTON1);
+
+I2C i2c(I2C1_SDA, I2C1_SCL);
+BME280 sensor(&i2c, BME280::I2CAddress::Address1);
 
 // Network
 NetworkInterface *network;
@@ -99,17 +105,20 @@ static void yield(){
  *
  */
 static int8_t publish() {
+    float pression= sensor.pressure();
+    char data[64];
+    snprintf(data,64, "%.2f", pression);
+    data[63] = '\0';
 
-    char *mqttPayload = "Hello from 6TRON";
 
     MQTT::Message message;
     message.qos = MQTT::QOS1;
     message.retained = false;
     message.dup = false;
-    message.payload = (void*)mqttPayload;
-    message.payloadlen = strlen(mqttPayload);
+    message.payload = (void*)data;
+    message.payloadlen = strlen(data);
 
-    printf("Send: %s to MQTT Broker: %s\n", mqttPayload, hostname);
+    printf("Send: %s to MQTT Broker: %s\n", data, hostname);
     rc = client->publish(MQTT_TOPIC_PUBLISH, message);
     if (rc != 0) {
         printf("Failed to publish: %d\n", rc);
@@ -123,6 +132,8 @@ static int8_t publish() {
 
 int main()
 {
+    sensor.initialize();
+    sensor.set_sampling();
     printf("Connecting to border router...\n");
 
     /* Get Network configuration */
