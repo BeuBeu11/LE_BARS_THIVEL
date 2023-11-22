@@ -19,9 +19,9 @@
 #include <MQTTClientMbedOs.h>
 
 namespace {
-#define GROUP_NUMBER            "group2"
-#define MQTT_TOPIC_PUBLISH      "/estia/"GROUP_NUMBER"/uplink"
-#define MQTT_TOPIC_SUBSCRIBE    "/estia/"GROUP_NUMBER"/downlink"
+#define GROUP_NUMBER            "feeds"
+#define MQTT_TOPIC_PUBLISH      "Martintvl/"GROUP_NUMBER"/test"
+#define MQTT_TOPIC_SUBSCRIBE    "Martintvl/"GROUP_NUMBER"/test"
 #define SYNC_INTERVAL           1
 #define MQTT_CLIENT_ID          "6LoWPAN_Node_"GROUP_NUMBER
 }
