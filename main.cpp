@@ -21,9 +21,10 @@
 namespace {
 #define GROUP_NUMBER            "feeds"
 #define MQTT_TOPIC_PUBLISH      "Martintvl/"GROUP_NUMBER"/test"
-#define MQTT_TOPIC_SUBSCRIBE    "Martintvl/"GROUP_NUMBER"/test"
+//#define MQTT_TOPIC_SUBSCRIBE    "Martintvl/"GROUP_NUMBER"/test"
 #define SYNC_INTERVAL           1
-#define MQTT_CLIENT_ID          "6LoWPAN_Node_"GROUP_NUMBER
+#define MQTT_TOPIC_SUBSCRIBE_Led    "Martintvl/feeds/onoff"
+
 }
 
 // Peripherals
@@ -171,7 +172,7 @@ int main()
     data.keepAliveInterval = 25;
     data.clientID.cstring = "6TRON_Martin_Benoit";
     data.username.cstring = (char*) "Martintvl"; // Adafruit username
-    data.password.cstring = (char*) "aio_vTPX12dOHiKC1TEkD2U2VlMnZSNW"; // Adafruit user key
+    data.password.cstring = (char*) "aio_HRxF107bUep19uraXeaRcXiUq6nL"; // Adafruit user key
 
     if (client->connect(data) != 0){
         printf("Connection to MQTT Broker Failed\n");
@@ -180,10 +181,10 @@ int main()
     printf("Connected to MQTT broker\n");
 
     /* MQTT Subscribe */
-    if ((rc = client->subscribe(MQTT_TOPIC_SUBSCRIBE, MQTT::QOS0, messageArrived)) != 0){
+    if ((rc = client->subscribe(MQTT_TOPIC_SUBSCRIBE_Led, MQTT::QOS0, messageArrived)) != 0){
         printf("rc from MQTT subscribe is %d\r\n", rc);
     }
-    printf("Subscribed to Topic: %s\n", MQTT_TOPIC_SUBSCRIBE);
+    printf("Subscribed to Topic: %s\n", MQTT_TOPIC_SUBSCRIBE_Led);
 
     yield();
 
